@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.card-slider {
+  width: 100vw;
+  height: 100vh;
+ background-image: url(./images/main\ ..png);
+  background-size: cover;
+  position: relative;
+}
+.nav .next,.nav .prev {
+  position: absolute;
+  height: 4rem;
+  width: 4rem;
+  stroke: #ffffff;
+  cursor: pointer;
+  z-index: 3;
+  pointer-events: auto;
+}
+.nav .next {
+  bottom: 4rem;
+  right: 4rem;
+  transform: scale(2) rotate(180deg);
+}
+.nav .prev {
+  top: 4rem;
+  left: 4rem;
+  transform: scale(2);
+}
+.card-slider .item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+.card-slider .item.is-active {
+  pointer-events: auto;
+}
+.card-slider .item .title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  font-family: "Melodrama";
+  font-size: 10vw;
+  font-weight: 900;
+  color: #222222;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+.card-slider .item .title span {
+  display: inline-block;
+  white-space: nowrap;
+}
+.card-slider .item .title .letter {
+  display: inline-block;
+}
+.card {
+  height: 600px;
+  width: 500px;
+  position: relative;
+}
+.card img {
+  width: 100%;
+  object-fit: contain;
+  opacity: 1;
+}
+.card .card-bg {
+  position: absolute;
+  top: 0;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  transform: scale(1.2);
+  transition: all 2s cubic-bezier(0.86, 0, 0.07, 1);
+}
+.card.is-active .card-bg {
+  transform: scale(1);
+}
+@media (max-width: 900px) {
+  .card-slider .item .title {
+    font-size: 17vw;
+  }
+}
+    </style>
+ <meta charset="UTF-8" />
+ <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Prime Product Slider</title>
+ <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body>
+ <div class="card-slider">
+  <div class="nav">
+  <div class="prev">
+  <svg viewBox="0 0 50 9">
+   <path d="m0 4.5 5-3m-5 3 5 3m45-3h-77"></path>
+  </svg>
+ </div>
+ <div class="next">
+   <svg viewBox="0 0 50 9">
+    <path d="m0 4.5 5-3m-5 3 5 3m45-3h-77"></path>
+   </svg>
+   </div>
+ </div>
+ <div class="items">
+  <div class="item">
+  <p class="title" style="color: rgb(236, 97, 47);"><span>orange</span></p>
+  <div class="card">
+  <img class="card-bg" src="./images/orange.png" />
+  </div>
+ </div>
+ <div class="item">
+  <p class="title" style="color: rgba(0, 0, 0, 0.758);"><span>black-ksi</span></p>
+  <div class="card">
+  <img class="card-bg" src="./images/ksi.png" />
+  </div>
+ </div>
+ <div class="item">
+  <p class="title" style="color: rgb(244, 43, 43);"><span>ice - pop</span></p>
+  <div class="card">
+  <img class="card-bg" src="./images/mix.png" />
+  </div>
+ </div>
+ <div class="item">
+  <p class="title" style="color: rgb(69, 182, 234);"><span>blue raspberry</span></p>
+  <div class="card">
+  <img class="card-bg" src="./images/BLUE_RASPBERRY-.png" />
+  </div>
+ </div>
+ <div class="item">
+  <p class="title" style="color: rgb(205, 205, 0);"><span>lemonade</span></p>
+  <div class="card">
+  <img class="card-bg" src="./images/prime-lemonade.png" />
+  </div>
+ </div>
+ </div>
+ </div>
+    <script src="script.js">
+        function init() {
+  let current = 0;
+  let directionForward = true;
+  const items = document.querySelectorAll(".card-slider .items .item");
+  const nextBtn = document.querySelector(".card-slider .next");
+  const prevBtn = document.querySelector(".card-slider .prev");
+
+  const getCurrentItem = () => {
+    return;};
+  const getCard = (item) => {
+    return item.querySelector(".card");};
+  const getTitle = (item) => {
+    return item.querySelector(".title span");};
+  const setItems = () => {
+    items.forEach((item, index) => {
+    getTitle(item).innerHTML = getTitle(item).textContent.replace(
+    /\S/g,
+    "<span class='letter'>$&</span>");
+  if (index === current) return;
+    anime.set(getCard(item), {
+     translateX: "100vw",
+    });
+  anime.set(getTitle(item).querySelectorAll(".letter"), {
+  clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
+      });
+    });
+  anime.set(items[current], {
+    translateX: 0,
+    opacity: 1,
+   });
+  };
+  const animate = {
+    in(item) {
+    const card = getCard(item);
+    const title = getTitle(item);
+
+  const tl = anime.timeline({
+    duration: 1000,
+    easing: "easeOutExpo",
+   });
+  tl.add({
+    targets: card,
+    translateX: directionForward ? ["100vw", 0] : ["-100vw", 0],
+    rotate: [40, 0],
+   }).add(
+      {
+       targets: title.querySelectorAll(".letter"),
+       clipPath: [
+       "polygon(0 0, 100% 0, 100% 0, 0 0)",
+       "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+      ],
+       translateY: directionForward ? ["1em", 0] : ["-1em", 0],
+       delay: anime.stagger(40),
+      },
+       "-=1000"
+      );
+       return tl;
+      },
+
+ out(item) {
+  const card = getCard(item);
+  const title = getTitle(item);
+  const tl = anime.timeline({
+    duration: 1000,
+    easing: "cubicBezier(0.86,0,0.07,1);",
+  });
+  tl.add({
+   targets: card,
+   translateX: directionForward ? [0, "-100vw"] : [0, "100vw"],
+   rotate: [0, -40],
+  }).add(
+   {
+   targets: title.querySelectorAll(".letter"),
+   clipPath: [
+   "polygon(0 0, 100% 0%, 100% 100%, 0% 100%)",
+   "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
+   ],
+    translateY: directionForward ? [0, "-1em"] : [0, "1em"],
+    delay: anime.stagger(40),
+   },
+     "-=1000"
+   );
+    return tl;
+   },
+  };
+  function updateClasses() {
+  items.forEach((item, index) => {
+   if (index == current) {
+   item.classList.add("is-active");
+  } else {
+   item.classList.remove("is-active");
+  }
+   });
+  }
+  function next() {
+   if (!directionForward) {
+   directionForward = !directionForward;
+  }
+  animate.out(items[current]);
+   current = (current + 1) % items.length;
+   setTimeout(function () {
+   animate.in(items[current]);
+  }, 500); // <-- Change the delay here
+   updateClasses();
+  }
+  function prev() {
+   if (directionForward) {
+   directionForward = !directionForward;
+  }
+  animate.out(items[current]);
+   current = (current - 1 + items.length) % items.length;
+   setTimeout(function () {
+  animate.in(items[current]);
+   }, 500); // <-- Change the delay here
+    updateClasses();
+  }
+  nextBtn.addEventListener("click", next);
+  prevBtn.addEventListener("click", prev);
+    setItems();
+  }
+document.addEventListener("DOMContentLoaded", init);
+
+    </script>
+</body>
+</html>
